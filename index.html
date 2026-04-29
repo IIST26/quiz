@@ -48,6 +48,7 @@
             border-radius: 15px; margin-top: 10px;
         }
         .coupon-code { font-family: monospace; font-size: 22px; font-weight: bold; color: #2c3e50; }
+        .terms { font-size: 10px; color: #e74c3c; margin-top: 5px; font-weight: 600; }
         
         button.retry-btn {
             margin-top: 20px; padding: 12px 30px; background: #2c3e50; 
@@ -76,8 +77,9 @@
                 <div id="discount-info" class="discount-msg"></div>
                 
                 <div id="coupon-area" style="display:none;" class="coupon-box">
-                    <p style="margin:0 0 5px 0; font-size: 11px; color: #7f8c8d;">VALID FOR TODAY ONLY:</p>
+                    <p style="margin:0 0 5px 0; font-size: 11px; color: #3498db; font-weight: 800;">VALID FOR 2 DAYS ONLY</p>
                     <div class="coupon-code">IIST100WIN</div>
+                    <div class="terms">*நிபந்தனைகளுக்கு உட்பட்டது</div>
                 </div>
                 
                 <p style="font-size: 10px; margin-top: 15px; color: #95a5a6;">இந்த ஸ்கிரீன்ஷாட்டை கடை உரிமையாளரிடம் காட்டவும்.</p>
@@ -177,7 +179,6 @@
             document.getElementById('result-screen').style.display = 'block';
             document.getElementById('final-correct').innerText = correctAnswers;
 
-            // Security: Set current Date & Time
             const now = new Date();
             const timeStamp = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
             document.getElementById('time-display').innerText = timeStamp;

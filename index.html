@@ -30,23 +30,22 @@
             color: #34495e;
         }
 
-        /* Feedback Colors */
         .correct-anim { background-color: #2ecc71 !important; color: white !important; border-color: #27ae60 !important; }
         .wrong-anim { background-color: #e74c3c !important; color: white !important; border-color: #c0392b !important; }
 
         #score-board {
             position: fixed; top: 20px; left: 20px; background: #2c3e50; color: white;
             padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 10000;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
 
         .result-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
-        .discount-msg { font-size: 16px; font-weight: 600; color: #2c3e50; margin: 15px 0; line-height: 1.4; }
+        .timestamp { font-size: 12px; color: #7f8c8d; background: #f1f1f1; padding: 5px 10px; border-radius: 10px; display: inline-block; margin-bottom: 15px; }
+        .discount-msg { font-size: 16px; font-weight: 600; color: #2c3e50; margin: 10px 0; line-height: 1.4; }
         .promo-val { font-size: 32px; font-weight: 900; color: #2ecc71; display: block; margin-top: 5px; }
         
         .coupon-box { 
             background: #f9f9f9; padding: 15px; border: 2px dashed #bdc3c7; 
-            border-radius: 15px; margin-top: 15px;
+            border-radius: 15px; margin-top: 10px;
         }
         .coupon-code { font-family: monospace; font-size: 22px; font-weight: bold; color: #2c3e50; }
         
@@ -70,16 +69,18 @@
 
             <div id="result-screen" style="display: none;">
                 <div id="result-title" class="result-title">முடிவு</div>
-                <p style="font-weight: 600;">சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
+                <div id="time-display" class="timestamp"></div>
+                
+                <p style="font-weight: 600; margin: 5px 0;">சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
                 
                 <div id="discount-info" class="discount-msg"></div>
                 
                 <div id="coupon-area" style="display:none;" class="coupon-box">
-                    <p style="margin:0 0 5px 0; font-size: 12px; color: #7f8c8d;">COUPON CODE:</p>
+                    <p style="margin:0 0 5px 0; font-size: 11px; color: #7f8c8d;">VALID FOR TODAY ONLY:</p>
                     <div class="coupon-code">IIST100WIN</div>
                 </div>
                 
-                <p style="font-size: 11px; margin-top: 15px; color: #95a5a6;">இந்த ஸ்கிரீன்ஷாட்டை IIST கடையில் காண்பிக்கவும்.</p>
+                <p style="font-size: 10px; margin-top: 15px; color: #95a5a6;">இந்த ஸ்கிரீன்ஷாட்டை கடை உரிமையாளரிடம் காட்டவும்.</p>
                 <button class="retry-btn" onclick="location.reload()">Retry Quiz</button>
             </div>
         </div>
@@ -93,26 +94,25 @@
     <script>
         const questionBank = [
             { q: "IPv6 முகவரி எத்தனை பிட்களைக் கொண்டது?", a: ["128 Bits", "32 Bits", "64 Bits", "256 Bits"], c: "128 Bits" },
-            { q: "கணினியின் தந்தை (Father of Computer) யார்?", a: ["Charles Babbage", "Alan Turing", "Bill Gates", "Blaise Pascal"], c: "Charles Babbage" },
-            { q: "1 TB என்பது எத்தனை GB-க்கு சமம்?", a: ["1024 GB", "1000 GB", "1100 GB", "512 GB"], c: "1024 GB" },
-            { q: "எது ஒரு 'Input Device' அல்ல?", a: ["Monitor", "Keyboard", "Mouse", "Scanner"], c: "Monitor" },
-            { q: "WWW-ஐ உருவாக்கியவர் யார்?", a: ["Tim Berners-Lee", "Vint Cerf", "Larry Page", "Mark Zuckerberg"], c: "Tim Berners-Lee" },
-            { q: "IIST (Institute of Informatic Skill Tech) அமைந்துள்ள வீதி எது?", a: ["Navalar Road", "Hospital Road", "Kandy Road", "Main Street"], c: "Navalar Road" },
-            { q: "கணினியின் தற்காலிக நினைவகம் (Temporary Memory) எது?", a: ["RAM", "ROM", "Hard Disk", "SSD"], c: "RAM" },
-            { q: "CPU-இன் வேகம் எதில் அளவிடப்படுகிறது?", a: ["Hertz", "Bits", "Amps", "Bytes"], c: "Hertz" },
-            { q: "மின்னஞ்சலை (Email) கண்டுபிடித்தவர் யார்?", a: ["Ray Tomlinson", "Bill Gates", "Tim Berners-Lee", "Steve Jobs"], c: "Ray Tomlinson" },
+            { q: "கணினியின் தந்தை யார்?", a: ["Charles Babbage", "Alan Turing", "Bill Gates", "Jobs"], c: "Charles Babbage" },
+            { q: "1 TB என்பது எத்தனை GB?", a: ["1024 GB", "1000 GB", "1100 GB", "512 GB"], c: "1024 GB" },
+            { q: "IIST அமைந்துள்ள வீதி எது?", a: ["Navalar Road", "Hospital Road", "Kandy Road", "Main Street"], c: "Navalar Road" },
+            { q: "கணினியின் தற்காலிக நினைவகம் எது?", a: ["RAM", "ROM", "Hard Disk", "Cache"], c: "RAM" },
+            { q: "WWW-ஐ உருவாக்கியவர் யார்?", a: ["Tim Berners-Lee", "Vint Cerf", "Larry Page", "Elon Musk"], c: "Tim Berners-Lee" },
+            { q: "Python உருவாக்கியவர் யார்?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne"], c: "Guido van Rossum" },
+            { q: "CPU-இன் வேகம் எதில் அளவிடப்படுகிறது?", a: ["Hertz", "Bits", "Bytes", "Amps"], c: "Hertz" },
             { q: "எது ஒரு 'Open Source' OS?", a: ["Linux", "Windows", "macOS", "iOS"], c: "Linux" },
-            { q: "Python மொழியை உருவாக்கியவர் யார்?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne Stroustrup"], c: "Guido van Rossum" },
-            { q: "GUI என்பதன் விரிவாக்கம் என்ன?", a: ["Graphical User Interface", "Global Unit Info", "General User Inter", "Guide User Info"], c: "Graphical User Interface" },
-            { q: "USB என்பதன் விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "Universal Smart Bus", "User Serial Bus"], c: "Universal Serial Bus" },
-            { q: "எது ஒரு Malware வகை அல்ல?", a: ["Firewall", "Virus", "Trojan", "Spyware"], c: "Firewall" },
-            { q: "முதல் தலைமுறை கணினிகளில் எவை பயன்படுத்தப்பட்டன?", a: ["Vacuum Tubes", "Transistors", "ICs", "Microprocessors"], c: "Vacuum Tubes" },
-            { q: "HTTP-இல் 'S' என்பதன் பொருள் என்ன?", a: ["Secure", "Simple", "Standard", "System"], c: "Secure" },
-            { q: "ஒரு Byte-இல் எத்தனை பிட்டுகள் (Bits) உள்ளன?", a: ["8 Bits", "4 Bits", "16 Bits", "32 Bits"], c: "8 Bits" },
-            { q: "எது ஒரு Web Browser?", a: ["Google Chrome", "Windows", "MS Excel", "WhatsApp"], c: "Google Chrome" },
-            { q: "PDF என்பதன் விரிவாக்கம் என்ன?", a: ["Portable Document Format", "Print Doc File", "Personal Document", "Port Doc Format"], c: "Portable Document Format" },
-            { q: "ROM என்பதன் விரிவாக்கம் என்ன?", a: ["Read Only Memory", "Random Only Memory", "Ready On Memory", "Read Open Memory"], c: "Read Only Memory" }
-            // மீதமுள்ள 80 கேள்விகளை இதே முறையில் (q, a, c) இங்கு சேர்த்து 100 ஆக்கலாம்.
+            { q: "HTTP-இல் 'S' என்பதன் பொருள்?", a: ["Secure", "Simple", "Standard", "System"], c: "Secure" },
+            { q: "கணினியின் மூளை எது?", a: ["CPU", "RAM", "ALU", "Monitor"], c: "CPU" },
+            { q: "ஒரு Byte-இல் எத்தனை Bits உள்ளன?", a: ["8", "4", "16", "32"], c: "8" },
+            { q: "எது 'Input Device'?", a: ["Keyboard", "Monitor", "Printer", "Speaker"], c: "Keyboard" },
+            { q: "எது ஒரு Browser?", a: ["Chrome", "Windows", "Excel", "WhatsApp"], c: "Chrome" },
+            { q: "USB விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "User Bus", "Smart Bus"], c: "Universal Serial Bus" },
+            { q: "IIST என்பதன் முழு வடிவம்?", a: ["Inst. of Informatic Skill Tech", "Info Tech", "India Tech", "Indust. Tech"], c: "Inst. of Informatic Skill Tech" },
+            { q: "PDF விரிவாக்கம் என்ன?", a: ["Portable Document Format", "Print File", "Personal Format", "Port File"], c: "Portable Document Format" },
+            { q: "எது சமூக வலைதளம் அல்ல?", a: ["Google Search", "Facebook", "Instagram", "Twitter"], c: "Google Search" },
+            { q: "எது நிரந்தர நினைவகம்?", a: ["Hard Disk", "RAM", "Cache", "Virtual"], c: "Hard Disk" },
+            { q: "GUI விரிவாக்கம்?", a: ["Graphical User Interface", "Global Info", "General User", "Guide Interface"], c: "Graphical User Interface" }
         ];
 
         let quizData = []; 
@@ -124,10 +124,8 @@
         const quizUI = document.getElementById('quiz-outer-container');
 
         function prepareQuiz() {
-            // 100 கேள்விகளிலிருந்து 10 கேள்விகளை ரேண்டமாக எடுத்தல்
             let shuffled = [...questionBank].sort(() => 0.5 - Math.random());
             quizData = shuffled.slice(0, 10);
-            // விடைகளை குலுக்குதல்
             quizData.forEach(item => item.a.sort(() => 0.5 - Math.random()));
         }
 
@@ -146,7 +144,6 @@
             document.getElementById('question').innerText = data.q;
             const btnArea = document.getElementById('options');
             btnArea.innerHTML = '';
-
             data.a.forEach(opt => {
                 const b = document.createElement('button');
                 b.className = 'option-btn';
@@ -159,20 +156,15 @@
         function handleAnswer(btn, selected, correct) {
             if (!canClick) return;
             canClick = false;
-
             const allBtns = document.querySelectorAll('.option-btn');
-            
             if (selected === correct) {
                 btn.classList.add('correct-anim');
                 correctAnswers++;
                 document.getElementById('correct-count').innerText = correctAnswers;
             } else {
                 btn.classList.add('wrong-anim');
-                allBtns.forEach(b => {
-                    if (b.innerText === correct) b.classList.add('correct-anim');
-                });
+                allBtns.forEach(b => { if (b.innerText === correct) b.classList.add('correct-anim'); });
             }
-
             setTimeout(() => {
                 currentIdx++;
                 if (currentIdx < quizData.length) loadQuestion();
@@ -184,6 +176,11 @@
             document.getElementById('quiz-content').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
             document.getElementById('final-correct').innerText = correctAnswers;
+
+            // Security: Set current Date & Time
+            const now = new Date();
+            const timeStamp = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
+            document.getElementById('time-display').innerText = timeStamp;
 
             const resTitle = document.getElementById('result-title');
             const discInfo = document.getElementById('discount-info');
@@ -197,7 +194,7 @@
             } else {
                 resTitle.innerText = "மீண்டும் முயற்சிப்போம்!";
                 resTitle.style.color = "#e74c3c";
-                discInfo.innerHTML = "<span style='color:#e74c3c'>தள்ளுபடி இல்லை</span><br><span style='font-size:12px'>10/10 எடுத்தால் மட்டுமே தள்ளுபடி உண்டு!</span>";
+                discInfo.innerHTML = "<span style='color:#e74c3c'>தள்ளுபடி இல்லை</span><br><span style='font-size:11px'>10/10 எடுத்தால் மட்டுமே தள்ளுபடி உண்டு!</span>";
                 coupArea.style.display = 'none';
             }
         }

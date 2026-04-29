@@ -6,107 +6,127 @@
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
     
     <style>
-        /* கேமரா முழு திரையில் தெரிய */
-        body { margin: 0; overflow: hidden; position: fixed; width: 100%; height: 100%; }
-
-        /* குவிஸ் கார்டு - கேமராவிற்கு மேலடுக்கில் (z-index) இருக்க வேண்டும் */
+        body { margin: 0; overflow: hidden; position: fixed; width: 100%; height: 100%; font-family: 'Poppins', sans-serif; }
         #quiz-outer-container {
-            position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            display: none; /* ஸ்கேன் செய்யும் வரை மறைவு */
-            justify-content: center;
-            align-items: center;
-            z-index: 9999; 
-            background: rgba(0, 0, 0, 0.2); /* லேசான கருப்பு நிழல் */
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            display: none; justify-content: center; align-items: center;
+            z-index: 9999; background: rgba(0, 0, 0, 0.6);
         }
-
         #quiz-card {
-            width: 85%;
-            max-width: 400px;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 25px;
-            border-radius: 25px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-            text-align: center;
-            pointer-events: auto; /* பட்டன்கள் வேலை செய்ய */
+            width: 90%; max-width: 450px; background: #fff; padding: 25px;
+            border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
         }
-
-        #question { font-size: 20px; font-weight: bold; margin-bottom: 20px; color: #333; }
-
+        #question { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #2c3e50; min-height: 50px; }
+        
         .option-btn {
-            display: block; width: 100%; padding: 15px; margin: 10px 0;
-            border: 2px solid #007bff; background: #fff;
-            border-radius: 12px; font-size: 16px; font-weight: 600;
-            cursor: pointer; transition: 0.2s;
+            display: block; width: 100%; padding: 12px; margin: 8px 0;
+            border: 2px solid #ecf0f1; background: #f8f9fa; border-radius: 12px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s;
         }
 
-        .option-btn:active { background: #007bff; color: white; }
+        /* பதில் நிலைகள் */
+        .correct-anim { background-color: #2ecc71 !important; color: white !important; border-color: #27ae60 !important; }
+        .wrong-anim { background-color: #e74c3c !important; color: white !important; border-color: #c0392b !important; }
 
         #score-board {
-            position: fixed; top: 15px; left: 15px;
-            background: #27ae60; color: white;
-            padding: 8px 20px; border-radius: 20px;
-            font-weight: bold; z-index: 10000;
+            position: fixed; top: 20px; left: 20px; background: #2c3e50; color: white;
+            padding: 8px 18px; border-radius: 20px; font-weight: bold; z-index: 10000;
         }
-
-        .discount-result { color: #d35400; font-size: 28px; font-weight: bold; margin: 15px 0; }
+        .discount-result { font-size: 28px; font-weight: 900; margin: 15px 0; }
+        .coupon-code { background: #f1f1f1; padding: 10px; border: 2px dashed #777; font-family: monospace; font-size: 20px; }
     </style>
 </head>
 <body>
 
-    <div id="score-board">Points: <span id="score">0</span></div>
+    <div id="score-board">Correct: <span id="correct-count">0</span> / 10</div>
 
     <div id="quiz-outer-container">
         <div id="quiz-card">
             <div id="quiz-content">
-                <div id="question">Loading Question...</div>
+                <div id="question-num" style="color:#3498db; font-weight:bold;">Question 1/10</div>
+                <div id="question">Loading...</div>
                 <div id="options"></div>
             </div>
 
             <div id="result-screen" style="display: none;">
-                <h2 style="color: #27ae60;">வெற்றி!</h2>
-                <p>உங்களின் மொத்த புள்ளிகள்: <span id="final-score">0</span></p>
-                <div class="discount-result" id="discount-val">LKR 0</div>
-                <p style="font-size: 13px;">IIST Shop-இல் இதைக் காட்டி தள்ளுபடி பெறுங்கள்!</p>
-                <button onclick="location.reload()" style="padding: 10px 20px; background: #333; color: #fff; border-radius: 10px; border: none;">Restart</button>
+                <h2 id="result-title">முடிவு</h2>
+                <p>சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
+                <div class="discount-result" id="discount-val"></div>
+                <div id="coupon-area" style="display:none;">
+                    <div class="coupon-code">IIST100JACKPOT</div>
+                </div>
+                <button onclick="location.reload()" style="margin-top:20px; padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 10px;">Retry</button>
             </div>
         </div>
     </div>
 
-    <a-scene 
-        mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: yes; uiScanning: yes;" 
-        embedded vr-mode-ui="enabled: false" 
-        device-orientation-permission-ui="enabled: false">
-        
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" embedded vr-mode-ui="enabled: false">
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
-
         <a-entity id="gate-target" mindar-image-target="targetIndex: 0"></a-entity>
     </a-scene>
 
     <script>
-        const quizData = [
-            { q: "கணினியின் தற்காலிக நினைவகம் (Temporary Memory) எது?", a: ["Hard Disk", "RAM", "Monitor"], correct: "RAM" },
-            { q: "IIST கடையின் அமைவிடம் எங்கே உள்ளது?", a: ["Navalar Road", "Hospital Road", "Main Street"], correct: "Navalar Road" },
-            { q: "ஒரு Byte-இல் எத்தனை பிட்டுகள் (Bits) உள்ளன?", a: ["4 Bits", "8 Bits", "16 Bits"], correct: "8 Bits" }
+        const questionBank = [
+            { q: "IPv6 முகவரி எத்தனை பிட்களைக் கொண்டது?", a: ["128", "32", "64", "256"], c: "128" },
+            { q: "கணினியின் தந்தை யார்?", a: ["Charles Babbage", "Alan Turing", "Bill Gates", "Jobs"], c: "Charles Babbage" },
+            { q: "எது ஒரு 'Input Device'?", a: ["Keyboard", "Monitor", "Printer", "Speaker"], c: "Keyboard" },
+            { q: "1 TB என்பது எத்தனை GB?", a: ["1024", "1000", "1100", "512"], c: "1024" },
+            { q: "WWW-ஐ உருவாக்கியவர் யார்?", a: ["Tim Berners-Lee", "Vint Cerf", "Larry Page", "Elon Musk"], c: "Tim Berners-Lee" },
+            { q: "IIST அமைந்துள்ள வீதி எது?", a: ["Navalar Road", "Hospital Road", "Main Street", "Kandy Road"], c: "Navalar Road" },
+            { q: "Python உருவாக்கியவர் யார்?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne"], c: "Guido van Rossum" },
+            { q: "CPU-இன் வேகம் எதில் அளவிடப்படுகிறது?", a: ["Hertz", "Bits", "Bytes", "Amps"], c: "Hertz" },
+            { q: "Email கண்டுபிடித்தவர் யார்?", a: ["Ray Tomlinson", "Bill Gates", "Vint Cerf", "Jobs"], c: "Ray Tomlinson" },
+            { q: "எது 'Open Source' OS?", a: ["Linux", "Windows", "macOS", "iOS"], c: "Linux" },
+            { q: "ROM என்பதன் விரிவாக்கம் என்ன?", a: ["Read Only Memory", "Random Only Memory", "Ready On Memory", "Read Open Memory"], c: "Read Only Memory" },
+            { q: "கணினியின் மூளை எது?", a: ["CPU", "RAM", "ALU", "Control Unit"], c: "CPU" },
+            { q: "ஒரு Byte-இல் எத்தனை Bits உள்ளன?", a: ["8", "4", "16", "32"], c: "8" },
+            { q: "PDF என்பதன் விரிவாக்கம்?", a: ["Portable Document Format", "Print Doc File", "Personal Doc Format", "Port Doc File"], c: "Portable Document Format" },
+            { q: "எது சமூக வலைதளம் அல்ல?", a: ["Google Search", "Facebook", "Instagram", "Twitter"], c: "Google Search" },
+            { q: "முதல் தலைமுறை கணினி எதைப் பயன்படுத்தியது?", a: ["Vacuum Tubes", "Transistors", "IC", "Microprocessor"], c: "Vacuum Tubes" },
+            { q: "எது 'Permanent Memory'?", a: ["Hard Disk", "RAM", "Cache", "Virtual Memory"], c: "Hard Disk" },
+            { q: "கணினியின் தற்காலிக நினைவகம் எது?", a: ["RAM", "ROM", "BIOS", "Registers"], c: "RAM" },
+            { q: "கணினி வலையமைப்பில் IP என்பதன் பொருள்?", a: ["Internet Protocol", "Internal Process", "Inter Point", "Info Protocol"], c: "Internet Protocol" },
+            { q: "எது ஒரு 'Browser'?", a: ["Chrome", "Windows", "Excel", "WhatsApp"], c: "Chrome" },
+            { q: "HTTP-இல் 'S' என்பதன் பொருள்?", a: ["Secure", "Simple", "Standard", "System"], c: "Secure" },
+            { q: "GUI என்பதன் விரிவாக்கம்?", a: ["Graphical User Interface", "Global Unit Info", "General User Inter", "Guide User Info"], c: "Graphical User Interface" },
+            { q: "எது 'Spreadsheet' மென்பொருள்?", a: ["Excel", "Word", "PowerPoint", "Access"], c: "Excel" },
+            { q: "USB விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "User Series Bus", "Universal Smart Bus"], c: "Universal Serial Bus" },
+            { q: "பாதுகாப்பான Password எது?", a: ["@Stro#ng12", "12345", "password", "Admin"], c: "@Stro#ng12" },
+            { q: "எது ஒரு 'Malware'?", a: ["Virus", "Firewall", "Antivirus", "Update"], c: "Virus" },
+            { q: "C மொழியை உருவாக்கியவர் யார்?", a: ["Dennis Ritchie", "Ken Thompson", "Bjarne", "James Gosling"], c: "Dennis Ritchie" },
+            { q: "HTML எதற்காகப் பயன்படுகிறது?", a: ["Web Design", "Database", "Gaming", "Calculations"], c: "Web Design" },
+            { q: "BIOS எங்கே சேமிக்கப்பட்டிருக்கும்?", a: ["ROM", "RAM", "Hard Disk", "USB"], c: "ROM" },
+            { q: "IIST-இன் முழு வடிவம் என்ன?", a: ["Inst. of Informatic Skill Tech", "Info Tech", "India Tech", "Indust. Tech"], c: "Inst. of Informatic Skill Tech" },
+            // ... (இதே போல 100 கேள்விகள் வரை நீங்கள் q, a, c அடிப்படையில் சேர்த்துக் கொள்ளலாம்)
+            { q: "ஒரு Kilobyte (1KB) என்பது எத்தனை Bytes?", a: ["1024", "1000", "1200", "512"], c: "1024" }
         ];
 
+        let quizData = []; 
         let currentIdx = 0;
-        let score = 0;
+        let correctAnswers = 0;
+        let canClick = true;
 
         const target = document.querySelector('#gate-target');
         const quizUI = document.getElementById('quiz-outer-container');
 
-        // டார்கெட் கண்டறியப்பட்டால் குவிஸைக் காட்டு
+        function prepareQuiz() {
+            let shuffled = [...questionBank].sort(() => 0.5 - Math.random());
+            quizData = shuffled.slice(0, 10);
+            quizData.forEach(item => item.a.sort(() => 0.5 - Math.random()));
+        }
+
         target.addEventListener("targetFound", () => {
-            if (currentIdx < quizData.length) {
+            if (currentIdx === 0) {
+                prepareQuiz();
                 quizUI.style.display = 'flex';
-                loadNext();
+                loadQuestion();
             }
         });
 
-        function loadNext() {
+        function loadQuestion() {
+            canClick = true;
             const data = quizData[currentIdx];
+            document.getElementById('question-num').innerText = `Question ${currentIdx + 1}/10`;
             document.getElementById('question').innerText = data.q;
             const btnArea = document.getElementById('options');
             btnArea.innerHTML = '';
@@ -115,29 +135,52 @@
                 const b = document.createElement('button');
                 b.className = 'option-btn';
                 b.innerText = opt;
-                b.onclick = () => {
-                    if(opt === data.correct) {
-                        score += 10;
-                        document.getElementById('score').innerText = score;
-                    }
-                    currentIdx++;
-                    if(currentIdx < quizData.length) loadNext();
-                    else showFinal();
-                };
+                b.onclick = () => handleAnswer(b, opt, data.c);
                 btnArea.appendChild(b);
             });
         }
 
-        function showFinal() {
+        function handleAnswer(btn, selected, correct) {
+            if (!canClick) return;
+            canClick = false;
+
+            const allBtns = document.querySelectorAll('.option-btn');
+            
+            if (selected === correct) {
+                btn.classList.add('correct-anim');
+                correctAnswers++;
+                document.getElementById('correct-count').innerText = correctAnswers;
+            } else {
+                btn.classList.add('wrong-anim');
+                // சரியான பதிலை பச்சையாகக் காட்டுதல்
+                allBtns.forEach(b => {
+                    if (b.innerText === correct) b.classList.add('correct-anim');
+                });
+            }
+
+            setTimeout(() => {
+                currentIdx++;
+                if (currentIdx < quizData.length) loadQuestion();
+                else showResult();
+            }, 1500); // 1.5 விநாடி தாமதம் (பதிலைப் பார்க்க)
+        }
+
+        function showResult() {
             document.getElementById('quiz-content').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
-            document.getElementById('final-score').innerText = score;
+            document.getElementById('final-correct').innerText = correctAnswers;
 
-            let disc = "LKR 20 OFF";
-            if(score >= 30) disc = "LKR 100 OFF";
-            else if(score >= 20) disc = "LKR 50 OFF";
-
-            document.getElementById('discount-val').innerText = disc;
+            if(correctAnswers === 10) {
+                document.getElementById('result-title').innerText = "வெற்றி!";
+                document.getElementById('discount-val').innerText = "LKR 100 OFF";
+                document.getElementById('discount-val').style.color = "#2ecc71";
+                document.getElementById('coupon-area').style.display = 'block';
+            } else {
+                document.getElementById('result-title').innerText = "தோல்வி!";
+                document.getElementById('discount-val').innerText = "தள்ளுபடி இல்லை";
+                document.getElementById('discount-val').style.color = "#e74c3c";
+                document.getElementById('coupon-area').style.display = 'none';
+            }
         }
     </script>
 </body>

@@ -8,52 +8,22 @@
     
     <style>
         body { margin: 0; overflow: hidden; position: fixed; width: 100%; height: 100%; font-family: 'Poppins', sans-serif; }
-        
-        #quiz-outer-container {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            display: none; justify-content: center; align-items: center;
-            z-index: 9999; background: rgba(0, 0, 0, 0.7);
-        }
-
-        #quiz-card {
-            width: 85%; max-width: 420px; background: #ffffff; padding: 25px;
-            border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center;
-        }
-
+        #quiz-outer-container { position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: none; justify-content: center; align-items: center; z-index: 9999; background: rgba(0, 0, 0, 0.7); }
+        #quiz-card { width: 85%; max-width: 420px; background: #ffffff; padding: 25px; border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center; }
         #question-num { color: #3498db; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
         #question { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #2c3e50; line-height: 1.5; min-height: 60px; }
-        
-        .option-btn {
-            display: block; width: 100%; padding: 14px; margin: 10px 0;
-            border: 2px solid #f1f1f1; background: #fdfdfd; border-radius: 15px;
-            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
-            color: #34495e;
-        }
-
+        .option-btn { display: block; width: 100%; padding: 14px; margin: 10px 0; border: 2px solid #f1f1f1; background: #fdfdfd; border-radius: 15px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; color: #34495e; }
         .correct-anim { background-color: #2ecc71 !important; color: white !important; border-color: #27ae60 !important; }
         .wrong-anim { background-color: #e74c3c !important; color: white !important; border-color: #c0392b !important; }
-
-        #score-board {
-            position: fixed; top: 20px; left: 20px; background: #2c3e50; color: white;
-            padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 10000;
-        }
-
+        #score-board { position: fixed; top: 20px; left: 20px; background: #2c3e50; color: white; padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 10000; }
         .result-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
         .timestamp { font-size: 12px; color: #7f8c8d; background: #f1f1f1; padding: 5px 10px; border-radius: 10px; display: inline-block; margin-bottom: 15px; }
         .discount-msg { font-size: 16px; font-weight: 600; color: #2c3e50; margin: 10px 0; line-height: 1.4; }
         .promo-val { font-size: 32px; font-weight: 900; color: #2ecc71; display: block; margin-top: 5px; }
-        
-        .coupon-box { 
-            background: #f9f9f9; padding: 15px; border: 2px dashed #bdc3c7; 
-            border-radius: 15px; margin-top: 10px;
-        }
+        .coupon-box { background: #f9f9f9; padding: 15px; border: 2px dashed #bdc3c7; border-radius: 15px; margin-top: 10px; }
         .coupon-code { font-family: monospace; font-size: 22px; font-weight: bold; color: #2c3e50; }
         .terms { font-size: 10px; color: #e74c3c; margin-top: 5px; font-weight: 600; }
-        
-        button.retry-btn {
-            margin-top: 20px; padding: 12px 30px; background: #2c3e50; 
-            color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer;
-        }
+        button.retry-btn { margin-top: 20px; padding: 12px 30px; background: #2c3e50; color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -71,17 +41,13 @@
             <div id="result-screen" style="display: none;">
                 <div id="result-title" class="result-title">முடிவு</div>
                 <div id="time-display" class="timestamp"></div>
-                
                 <p style="font-weight: 600; margin: 5px 0;">சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
-                
                 <div id="discount-info" class="discount-msg"></div>
-                
                 <div id="coupon-area" style="display:none;" class="coupon-box">
                     <p style="margin:0 0 5px 0; font-size: 11px; color: #3498db; font-weight: 800;">VALID FOR 2 DAYS ONLY</p>
                     <div class="coupon-code">IIST100WIN</div>
                     <div class="terms">*நிபந்தனைகளுக்கு உட்பட்டது</div>
                 </div>
-                
                 <p style="font-size: 10px; margin-top: 15px; color: #95a5a6;">இந்த ஸ்கிரீன்ஷாட்டை கடை உரிமையாளரிடம் காட்டவும்.</p>
                 <button class="retry-btn" onclick="location.reload()">Retry Quiz</button>
             </div>
@@ -110,11 +76,91 @@
             { q: "எது 'Input Device'?", a: ["Keyboard", "Monitor", "Printer", "Speaker"], c: "Keyboard" },
             { q: "எது ஒரு Browser?", a: ["Chrome", "Windows", "Excel", "WhatsApp"], c: "Chrome" },
             { q: "USB விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "User Bus", "Smart Bus"], c: "Universal Serial Bus" },
-            { q: "IIST என்பதன் முழு வடிவம்?", a: ["Inst. of Informatic Skill Tech", "Info Tech", "India Tech", "Indust. Tech"], c: "Inst. of Informatic Skill Tech" },
+            { q: "IIST என்பதன் முழு வடிவம்?", a: ["Institute of Informatic Skill Tech", "Info Tech", "India Tech", "Indust. Tech"], c: "Institute of Informatic Skill Tech" },
             { q: "PDF விரிவாக்கம் என்ன?", a: ["Portable Document Format", "Print File", "Personal Format", "Port File"], c: "Portable Document Format" },
             { q: "எது சமூக வலைதளம் அல்ல?", a: ["Google Search", "Facebook", "Instagram", "Twitter"], c: "Google Search" },
             { q: "எது நிரந்தர நினைவகம்?", a: ["Hard Disk", "RAM", "Cache", "Virtual"], c: "Hard Disk" },
-            { q: "GUI விரிவாக்கம்?", a: ["Graphical User Interface", "Global Info", "General User", "Guide Interface"], c: "Graphical User Interface" }
+            { q: "GUI விரிவாக்கம்?", a: ["Graphical User Interface", "Global Info", "General User", "Guide Interface"], c: "Graphical User Interface" },
+            { q: "இணையத்தின் தந்தை யார்?", a: ["Vint Cerf", "Mark Zuckerberg", "Bill Gates", "Tim Berners"], c: "Vint Cerf" },
+            { q: "எது ஒரு கணினி வைரஸ் வகை?", a: ["Trojan Horse", "Monitor", "Scanner", "Mouse"], c: "Trojan Horse" },
+            { q: "RAM என்பது என்ன?", a: ["Volatile Memory", "Non-volatile", "Permanent", "Slow"], c: "Volatile Memory" },
+            { q: "MS Office என்பது ஒரு...?", a: ["Application Software", "System Software", "OS", "Driver"], c: "Application Software" },
+            { q: "HTML எதற்காக பயன்படுகிறது?", a: ["Web Design", "Accounting", "Gaming", "Video Editing"], c: "Web Design" },
+            { q: "இணையத்தில் தரவுகளை தேட பயன்படுவது எது?", a: ["Search Engine", "Printer", "Monitor", "RAM"], c: "Search Engine" },
+            { q: "எது ஒரு மின்னஞ்சல் முகவரி அல்ல?", a: ["www.google.com", "user@gmail.com", "test@yahoo.com", "info@iist.lk"], c: "www.google.com" },
+            { q: "கணினியில் தரவுகளை சேமிக்கும் மிகச்சிறிய அலகு?", a: ["Bit", "Byte", "KB", "MB"], c: "Bit" },
+            { q: "URL என்பதன் விரிவாக்கம்?", a: ["Uniform Resource Locator", "User Remote Link", "Unit Resource Link", "User Link"], c: "Uniform Resource Locator" },
+            { q: "எது ஒரு ஆப்பரேட்டிங் சிஸ்டம் அல்ல?", a: ["MS Word", "Windows 10", "Android", "Linux"], c: "MS Word" },
+            { q: "விசைப்பலகையில் எத்தனை Function Keys உள்ளன?", a: ["12", "10", "15", "8"], c: "12" },
+            { q: "எது 'Output Device'?", a: ["Printer", "Keyboard", "Mouse", "Joystick"], c: "Printer" },
+            { q: "BIOS எங்கு சேமிக்கப்பட்டிருக்கும்?", a: ["ROM", "RAM", "Hard Disk", "SSD"], c: "ROM" },
+            { q: "1024 Bytes என்பது என்ன?", a: ["1 KB", "1 MB", "1 GB", "1 TB"], c: "1 KB" },
+            { q: "Excel கோப்பின் விரிவாக்கம் (Extension) என்ன?", a: [".xlsx", ".docx", ".pptx", ".txt"], c: ".xlsx" },
+            { q: "IP Address-இன் விரிவாக்கம்?", a: ["Internet Protocol", "Inter Process", "Info Protocol", "Internal Post"], c: "Internet Protocol" },
+            { q: "எது கணினியின் பாதுகாப்பு மென்பொருள்?", a: ["Antivirus", "Photoshop", "VLC Player", "Chrome"], c: "Antivirus" },
+            { q: "LAN என்பதன் விரிவாக்கம்?", a: ["Local Area Network", "Link Area", "Large Area", "Light Area"], c: "Local Area Network" },
+            { q: "இணையத்தில் கோப்புகளை பதிவேற்றுவது எவ்வாறு அழைக்கப்படும்?", a: ["Uploading", "Downloading", "Copying", "Deleting"], c: "Uploading" },
+            { q: "கணினியின் வேகம் எதில் அளவிடப்படுகிறது?", a: ["GHz", "Km/h", "Kg", "Litre"], c: "GHz" },
+            { q: "எது Apple நிறுவனத்தின் OS?", a: ["macOS", "Windows", "Linux", "Android"], c: "macOS" },
+            { q: "ASCII-இன் விரிவாக்கம்?", a: ["American Standard Code", "Asian Standard", "Apple Code", "Active Code"], c: "American Standard Code" },
+            { q: "எது 'Pointing Device'?", a: ["Mouse", "Keyboard", "Scanner", "CPU"], c: "Mouse" },
+            { q: "CD-இன் சேமிப்பு திறன் தோராயமாக எவ்வளவு?", a: ["700 MB", "4.7 GB", "1 TB", "2 GB"], c: "700 MB" },
+            { q: "எது 'Non-Volatile' நினைவகம்?", a: ["ROM", "RAM", "Cache", "SRAM"], c: "ROM" },
+            { q: "Facebook-ஐ உருவாக்கியவர் யார்?", a: ["Mark Zuckerberg", "Bill Gates", "Jack Dorsey", "Elon Musk"], c: "Mark Zuckerberg" },
+            { q: "கணினி திரையில் தெரியும் மிகச்சிறிய புள்ளி?", a: ["Pixel", "Dot", "Point", "Square"], c: "Pixel" },
+            { q: "ஒரு Nibble எத்தனை பிட்களுக்கு சமம்?", a: ["4 Bits", "8 Bits", "2 Bits", "16 Bits"], c: "4 Bits" },
+            { q: "MODEM என்பதன் விரிவாக்கம்?", a: ["Modulator Demodulator", "Mode Demo", "Multi Device", "Mobility Demo"], c: "Modulator Demodulator" },
+            { q: "எது 'Database' மென்பொருள்?", a: ["MySQL", "Word", "Excel", "Paint"], c: "MySQL" },
+            { q: "தற்கால கணினிகளின் தந்தை யார்?", a: ["Alan Turing", "Charles Babbage", "Bill Gates", "Jobs"], c: "Alan Turing" },
+            { q: "எது ஒரு பிரதான நினைவகம் (Primary Memory)?", a: ["RAM", "Hard Disk", "Pen Drive", "CD"], c: "RAM" },
+            { q: "Wi-Fi என்பதன் விரிவாக்கம்?", a: ["Wireless Fidelity", "Wireless Find", "Wire Fire", "Wireless File"], c: "Wireless Fidelity" },
+            { q: "விசைப்பலகையில் மிக நீளமான விசை எது?", a: ["Spacebar", "Enter", "Shift", "Backspace"], c: "Spacebar" },
+            { q: "VPN என்பதன் விரிவாக்கம்?", a: ["Virtual Private Network", "Visual Private", "Virtual Public", "Video Post"], c: "Virtual Private Network" },
+            { q: "முதல் கணினி மொழி எது?", a: ["FORTRAN", "Java", "C", "Python"], c: "FORTRAN" },
+            { q: "IC (Integrated Circuit) எதனால் செய்யப்பட்டது?", a: ["Silicon", "Copper", "Iron", "Gold"], c: "Silicon" },
+            { q: "ஒரு கிலோபைட் (KB) எத்தனை பைட்டுகளுக்கு சமம்?", a: ["1024 Bytes", "1000 Bytes", "1100 Bytes", "512 Bytes"], c: "1024 Bytes" },
+            { q: "எது ஒரு Cloud Storage சேவை?", a: ["Google Drive", "Hard Disk", "VLC", "WinRAR"], c: "Google Drive" },
+            { q: "இணையத்தில் உலா வர உதவுவது எது?", a: ["Web Browser", "Printer", "Monitor", "Excel"], c: "Web Browser" },
+            { q: "E-mail என்பதில் 'E' எதை குறிக்கிறது?", a: ["Electronic", "Energy", "Easy", "Express"], c: "Electronic" },
+            { q: "கணினியில் தவறு (Error) எவ்வாறு அழைக்கப்படும்?", a: ["Bug", "Mistake", "Default", "Failure"], c: "Bug" },
+            { q: "எது 'Presentation மென்பொருள்?", a: ["MS PowerPoint", "MS Word", "MS Excel", "MS Access"], c: "MS PowerPoint" },
+            { q: "கணினியின் தந்தை என்று அழைக்கப்படுபவர்?", a: ["Charles Babbage", "Newton", "Einstein", "Galileo"], c: "Charles Babbage" },
+            { q: "RAM-இன் முழு வடிவம்?", a: ["Random Access Memory", "Read Access", "Ready Access", "Real Access"], c: "Random Access Memory" },
+            { q: "ROM-இன் முழு வடிவம்?", a: ["Read Only Memory", "Random Only", "Read Open", "Ready Only"], c: "Read Only Memory" },
+            { q: "கணினி திரையை (Monitor) இவ்வாறு அழைக்கலாம்...?", a: ["VDU", "CPU", "UPS", "GPU"], c: "VDU" },
+            { q: "எது ஒரு தேடல் இயந்திரம் (Search Engine)?", a: ["Google", "Chrome", "Firefox", "WhatsApp"], c: "Google" },
+            { q: "அறிமுகப்படுத்தப்பட்ட முதல் கணினி எது?", a: ["ENIAC", "UNIVAC", "IBM PC", "Apple I"], c: "ENIAC" },
+            { q: "கணினி சிஸ்டத்தை கட்டுப்படுத்துவது எது?", a: ["Operating System", "Keyboard", "Mouse", "Speaker"], c: "Operating System" },
+            { q: "அதிக அளவு தரவுகளை சேமிக்க உதவுவது எது?", a: ["Hard Disk", "RAM", "Cache", "Register"], c: "Hard Disk" },
+            { q: "எது ஒரு 'Graphic' மென்பொருள்?", a: ["Adobe Photoshop", "Notepad", "Calculator", "Excel"], c: "Adobe Photoshop" },
+            { q: "இணையத்தில் தகவல்களை அனுப்பும் விதிமுறை?", a: ["Protocol", "Program", "Package", "Pathway"], c: "Protocol" },
+            { q: "கணினியின் குறுக்குவழி சாவி (Short cut) Ctrl+C எதற்கு?", a: ["Copy", "Paste", "Cut", "Delete"], c: "Copy" },
+            { q: "Ctrl+V எதற்காக பயன்படுகிறது?", a: ["Paste", "Copy", "Undo", "Save"], c: "Paste" },
+            { q: "Ctrl+S எதற்காக பயன்படுகிறது?", a: ["Save", "Open", "Print", "Undo"], c: "Save" },
+            { q: "Ctrl+Z எதற்காக பயன்படுகிறது?", a: ["Undo", "Redo", "Select All", "Print"], c: "Undo" },
+            { q: "Ctrl+X எதற்காக பயன்படுகிறது?", a: ["Cut", "Copy", "Paste", "Save"], c: "Cut" },
+            { q: "Ctrl+A எதற்காக பயன்படுகிறது?", a: ["Select All", "Save", "Print", "Undo"], c: "Select All" },
+            { q: "கணினியை மறுதொடக்கம் செய்வது (Restart) எவ்வாறு அழைக்கப்படும்?", a: ["Rebooting", "Starting", "Login", "Shutting"], c: "Rebooting" },
+            { q: "எது ஒரு சமூக ஊடகம்?", a: ["Instagram", "Google Search", "Calculator", "Word"], c: "Instagram" },
+            { q: "ஒரு மெகாபைட் (MB) எத்தனை KB-க்கு சமம்?", a: ["1024 KB", "1000 KB", "1100 KB", "512 KB"], c: "1024 KB" },
+            { q: "எது கணினியின் 'Hardware' அல்ல?", a: ["Operating System", "Motherboard", "Processor", "Mouse"], c: "Operating System" },
+            { q: "அதிக வேகமான இணைய இணைப்பு எது?", a: ["Fiber Optic", "Dial-up", "DSL", "Bluetooth"], c: "Fiber Optic" },
+            { q: "MS Word-இல் எழுத்துக்களை தடிமனாக்க (Bold) பயன்படுவது?", a: ["Ctrl+B", "Ctrl+I", "Ctrl+U", "Ctrl+S"], c: "Ctrl+B" },
+            { q: "MS Word-இல் எழுத்துக்களை சாய்வாக (Italic) மாற்ற பயன்படுவது?", a: ["Ctrl+I", "Ctrl+B", "Ctrl+U", "Ctrl+E"], c: "Ctrl+I" },
+            { q: "இணைய பக்கங்களின் முகவரி இவ்வாறு அழைக்கப்படும்...?", a: ["URL", "Email", "IP", "MAC"], c: "URL" },
+            { q: "SSD என்பதன் விரிவாக்கம்?", a: ["Solid State Drive", "Smart State", "Simple Storage", "Super Speed"], c: "Solid State Drive" },
+            { q: "LAN என்பது எந்த இடத்திற்கு பொருத்தமானது?", a: ["Office", "Country", "World", "Sky"], c: "Office" },
+            { q: "USB என்றால் என்ன?", a: ["Universal Serial Bus", "Unit Serial", "Uniform Serial", "User Bus"], c: "Universal Serial Bus" },
+            { q: "எது கூகுள் நிறுவனத்திற்கு சொந்தமானது?", a: ["Android", "Windows", "iOS", "Linux"], c: "Android" },
+            { q: "ஜாவா (Java) ஒரு...?", a: ["Programming Language", "OS", "Hardware", "Database"], c: "Programming Language" },
+            { q: "எது 'Wireless' தொழில்நுட்பம்?", a: ["Bluetooth", "Fiber Optic", "Coaxial Cable", "USB"], c: "Bluetooth" },
+            { q: "எது 'Input' மற்றும் 'Output' இரண்டாகவும் செயல்படும்?", a: ["Touchscreen", "Monitor", "Keyboard", "Mouse"], c: "Touchscreen" },
+            { q: "எது உலகின் முதல் இணையம்?", a: ["ARPANET", "Internet", "Google", "Facebook"], c: "ARPANET" },
+            { q: "கணினியில் தரவுகளை 'Copy' செய்த பின் எங்கு தற்காலிகமாக இருக்கும்?", a: ["Clipboard", "Monitor", "Printer", "Scanner"], c: "Clipboard" },
+            { q: "எது ஒரு மைக்ரோசாப்ட் தயாரிப்பு?", a: ["Windows", "iPhone", "macOS", "PlayStation"], c: "Windows" },
+            { q: "கணினியின் மிக வேகமான நினைவகம்?", a: ["Cache Memory", "RAM", "Hard Disk", "SSD"], c: "Cache Memory" },
+            { q: "ஜாய்ஸ்டிக் (Joystick) எதற்காக பயன்படுகிறது?", a: ["Gaming", "Typing", "Scanning", "Printing"], c: "Gaming" },
+            { q: "IIST நிறுவனத்தின் நிறுவனர் யார்?", a: ["Founder of IIST", "Bill Gates", "Jobs", "Mark"], c: "Founder of IIST" }
         ];
 
         let quizData = []; 
@@ -178,11 +224,9 @@
             document.getElementById('quiz-content').style.display = 'none';
             document.getElementById('result-screen').style.display = 'block';
             document.getElementById('final-correct').innerText = correctAnswers;
-
             const now = new Date();
             const timeStamp = now.toLocaleDateString() + " | " + now.toLocaleTimeString();
             document.getElementById('time-display').innerText = timeStamp;
-
             const resTitle = document.getElementById('result-title');
             const discInfo = document.getElementById('discount-info');
             const coupArea = document.getElementById('coupon-area');

@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+    
+    <style>
+      body { margin: 0; overflow: hidden; font-family: 'Segoe UI', sans-serif; }
+      
+      /* குவிஸ் கார்டு அமைப்பு */
+      #quiz-container {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85%;
+        background: rgba(255, 255, 255, 0.95);
+        padding: 20px;
+        border-radius: 20px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        display: none; /* ஸ்கேன் செய்யும் வரை மறைத்து வைக்கப்படும் */
+        z-index: 1000;
+        text-align: center;
+      }
+
+      #question { font-size: 18px; font-weight: bold; color: #2c3e50; margin-bottom: 20px; }
+
+      .option-btn {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin: 10px 0;
+        border: 2px solid #3498db;
+        background: white;
+        border-radius: 10px;
+        font-size: 16px;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+
+      .option-btn:active { background: #3498db; color: white; }
+
+      #score-board {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #2ecc71;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 30px;
+        font-weight: bold;
+        z-index: 1001;
+      }
+
+      /* ரிசல்ட் ஸ்கிரீன் */
+      #result-screen {
+        display: none;
+        text-align: center;
+      }
+
+      .discount-box {
+        background: #f1c40f;
+        padding: 15px;
+        border-radius: 10px;
+        font-size: 24px;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+    </style>
+  </head>
+  <body>
+
+    <div id="score-board">Score: <span id="score">0</span></div>
+
+    <div id="quiz-container">
+      <div id="quiz-content">
+        <div id="question">கேள்வி லோட் ஆகிறது...</div>
+        <div id="options"></div>
+      </div>
+      
+      <div id="result-screen">
+        <h2 style="color: #27ae60;">வாழ்த்துகள்!</h2>
+        <p id="final-msg">நீங்கள் அனைத்து கேள்விகளுக்கும் பதிலளித்துவிட்டீர்கள்.</p>
+        <div class="discount-box" id="discount-text">LKR 50 OFF</div>
+        <p style="font-size: 12px; margin-top: 10px;">இந்த ஸ்கிரீன்ஷாட்டை IIST கடையில் காண்பிக்கவும்.</p>
+        <button onclick="location.reload()" style="margin-top:10px; padding:8px; border-radius:10px; border:none; background:#333; color:#fff;">மீண்டும் விளையாடு</button>
+      </div>
+    </div>
+
+    <a-scene 
+      mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" 
+      embedded vr-mode-ui="enabled: false" 
+      device-orientation-permission-ui="enabled: false">
+      
+      <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
+
+      <a-entity id="quiz-target" mindar-image-target="targetIndex: 0"></a-entity>
+    </a-scene>
+
+    <script>
+      // கேள்விகள் மற்றும் பதில்கள்
+      const quizData = [
+        { q: "கணினியின் தற்காலிக நினைவகம் எது?", a: ["Hard Disk", "RAM", "ROM", "CPU"], correct: "RAM" },
+        { q: "IIST என்பதன் விரிவாக்கம் என்ன?", a: ["Info Tech", "Informatics Skill Tech", "India Skill Tech", "Industrial Tech"], correct: "Informatics Skill Tech" },
+        { q: "Input device எது?", a: ["Monitor", "Printer", "Speaker", "Keyboard"], correct: "Keyboard" }
+      ];
+
+      let currentQuestionIndex = 0;
+      let score = 0;
+      const scoreEl = document.getElementById('score');
+      const quizContainer = document.getElementById('quiz-container');
+      const quizContent = document.getElementById('quiz-content');
+      const resultScreen = document.getElementById('result-screen');
+
+      // டார்கெட் ஸ்கேன் ஆனவுடன் குவிஸைக் காட்டு
+      const target = document.querySelector('#quiz-target');
+      target.addEventListener("targetFound", () => {
+        if (currentQuestionIndex < quizData.length) {
+          quizContainer.style.display = 'block';
+          loadQuestion();
+        }
+      });
+
+      // டார்கெட் மறையும்போது குவிஸை மறை (விருப்பமென்றால் மட்டும்)
+      target.addEventListener("targetLost", () => {
+        // quizContainer.style.display = 'none'; 
+      });
+
+      function loadQuestion() {
+        const qData = quizData[currentQuestionIndex];
+        document.getElementById('question').innerText = qData.q;
+        const optionsContainer = document.getElementById('options');
+        optionsContainer.innerHTML = '';
+
+        qData.a.forEach(opt => {
+          const btn = document.createElement('button');
+          btn.className = 'option-btn';
+          btn.innerText = opt;
+          btn.onclick = () => handleAnswer(opt);
+          optionsContainer.appendChild(btn);
+        });
+      }
+
+      function handleAnswer(selected) {
+        if (selected === quizData[currentQuestionIndex].correct) {
+          score += 10;
+          scoreEl.innerText = score;
+        }
+
+        currentQuestionIndex++;
+
+        if (currentQuestionIndex < quizData.length) {
+          loadQuestion();
+        } else {
+          showResult();
+        }
+      }
+
+      function showResult() {
+        quizContent.style.display = 'none';
+        resultScreen.style.display = 'block';
+        
+        // ஸ்கோருக்கு ஏற்ப டிஸ்கவுண்ட்
+        let discount = "LKR 20 OFF";
+        if (score >= 30) discount = "LKR 100 OFF";
+        else if (score >= 20) discount = "LKR 50 OFF";
+
+        document.getElementById('discount-text').innerText = discount;
+      }
+    </script>
+  </body>
+</html>

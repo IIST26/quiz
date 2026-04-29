@@ -4,36 +4,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <script src="https://aframe.io/releases/1.4.1/aframe.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/mind-ar@1.2.2/dist/mindar-image-aframe.prod.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     
     <style>
         body { margin: 0; overflow: hidden; position: fixed; width: 100%; height: 100%; font-family: 'Poppins', sans-serif; }
+        
         #quiz-outer-container {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: none; justify-content: center; align-items: center;
-            z-index: 9999; background: rgba(0, 0, 0, 0.6);
-        }
-        #quiz-card {
-            width: 90%; max-width: 450px; background: #fff; padding: 25px;
-            border-radius: 25px; box-shadow: 0 20px 50px rgba(0,0,0,0.5); text-align: center;
-        }
-        #question { font-size: 18px; font-weight: bold; margin-bottom: 20px; color: #2c3e50; min-height: 50px; }
-        
-        .option-btn {
-            display: block; width: 100%; padding: 12px; margin: 8px 0;
-            border: 2px solid #ecf0f1; background: #f8f9fa; border-radius: 12px;
-            font-size: 15px; font-weight: 600; cursor: pointer; transition: 0.3s;
+            z-index: 9999; background: rgba(0, 0, 0, 0.7);
         }
 
-        /* பதில் நிலைகள் */
+        #quiz-card {
+            width: 85%; max-width: 420px; background: #ffffff; padding: 25px;
+            border-radius: 30px; box-shadow: 0 20px 60px rgba(0,0,0,0.6); text-align: center;
+        }
+
+        #question-num { color: #3498db; font-weight: 800; font-size: 14px; text-transform: uppercase; margin-bottom: 10px; }
+        #question { font-size: 18px; font-weight: 600; margin-bottom: 20px; color: #2c3e50; line-height: 1.5; min-height: 60px; }
+        
+        .option-btn {
+            display: block; width: 100%; padding: 14px; margin: 10px 0;
+            border: 2px solid #f1f1f1; background: #fdfdfd; border-radius: 15px;
+            font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.2s ease;
+            color: #34495e;
+        }
+
+        /* Feedback Colors */
         .correct-anim { background-color: #2ecc71 !important; color: white !important; border-color: #27ae60 !important; }
         .wrong-anim { background-color: #e74c3c !important; color: white !important; border-color: #c0392b !important; }
 
         #score-board {
             position: fixed; top: 20px; left: 20px; background: #2c3e50; color: white;
-            padding: 8px 18px; border-radius: 20px; font-weight: bold; z-index: 10000;
+            padding: 10px 20px; border-radius: 50px; font-weight: bold; z-index: 10000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
-        .discount-result { font-size: 28px; font-weight: 900; margin: 15px 0; }
-        .coupon-code { background: #f1f1f1; padding: 10px; border: 2px dashed #777; font-family: monospace; font-size: 20px; }
+
+        .result-title { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+        .discount-msg { font-size: 16px; font-weight: 600; color: #2c3e50; margin: 15px 0; line-height: 1.4; }
+        .promo-val { font-size: 32px; font-weight: 900; color: #2ecc71; display: block; margin-top: 5px; }
+        
+        .coupon-box { 
+            background: #f9f9f9; padding: 15px; border: 2px dashed #bdc3c7; 
+            border-radius: 15px; margin-top: 15px;
+        }
+        .coupon-code { font-family: monospace; font-size: 22px; font-weight: bold; color: #2c3e50; }
+        
+        button.retry-btn {
+            margin-top: 20px; padding: 12px 30px; background: #2c3e50; 
+            color: white; border: none; border-radius: 15px; font-weight: bold; cursor: pointer;
+        }
     </style>
 </head>
 <body>
@@ -43,62 +63,56 @@
     <div id="quiz-outer-container">
         <div id="quiz-card">
             <div id="quiz-content">
-                <div id="question-num" style="color:#3498db; font-weight:bold;">Question 1/10</div>
+                <div id="question-num">Question 1/10</div>
                 <div id="question">Loading...</div>
                 <div id="options"></div>
             </div>
 
             <div id="result-screen" style="display: none;">
-                <h2 id="result-title">முடிவு</h2>
-                <p>சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
-                <div class="discount-result" id="discount-val"></div>
-                <div id="coupon-area" style="display:none;">
-                    <div class="coupon-code">IIST100JACKPOT</div>
+                <div id="result-title" class="result-title">முடிவு</div>
+                <p style="font-weight: 600;">சரியான பதில்கள்: <span id="final-correct">0</span> / 10</p>
+                
+                <div id="discount-info" class="discount-msg"></div>
+                
+                <div id="coupon-area" style="display:none;" class="coupon-box">
+                    <p style="margin:0 0 5px 0; font-size: 12px; color: #7f8c8d;">COUPON CODE:</p>
+                    <div class="coupon-code">IIST100WIN</div>
                 </div>
-                <button onclick="location.reload()" style="margin-top:20px; padding: 10px 20px; background: #2c3e50; color: white; border: none; border-radius: 10px;">Retry</button>
+                
+                <p style="font-size: 11px; margin-top: 15px; color: #95a5a6;">இந்த ஸ்கிரீன்ஷாட்டை IIST கடையில் காண்பிக்கவும்.</p>
+                <button class="retry-btn" onclick="location.reload()">Retry Quiz</button>
             </div>
         </div>
     </div>
 
-    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true;" embedded vr-mode-ui="enabled: false">
+    <a-scene mindar-image="imageTargetSrc: ./targets.mind; autoStart: true; uiLoading: no;" embedded vr-mode-ui="enabled: false">
         <a-camera position="0 0 0" look-controls="enabled: false"></a-camera>
         <a-entity id="gate-target" mindar-image-target="targetIndex: 0"></a-entity>
     </a-scene>
 
     <script>
         const questionBank = [
-            { q: "IPv6 முகவரி எத்தனை பிட்களைக் கொண்டது?", a: ["128", "32", "64", "256"], c: "128" },
-            { q: "கணினியின் தந்தை யார்?", a: ["Charles Babbage", "Alan Turing", "Bill Gates", "Jobs"], c: "Charles Babbage" },
-            { q: "எது ஒரு 'Input Device'?", a: ["Keyboard", "Monitor", "Printer", "Speaker"], c: "Keyboard" },
-            { q: "1 TB என்பது எத்தனை GB?", a: ["1024", "1000", "1100", "512"], c: "1024" },
-            { q: "WWW-ஐ உருவாக்கியவர் யார்?", a: ["Tim Berners-Lee", "Vint Cerf", "Larry Page", "Elon Musk"], c: "Tim Berners-Lee" },
-            { q: "IIST அமைந்துள்ள வீதி எது?", a: ["Navalar Road", "Hospital Road", "Main Street", "Kandy Road"], c: "Navalar Road" },
-            { q: "Python உருவாக்கியவர் யார்?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne"], c: "Guido van Rossum" },
-            { q: "CPU-இன் வேகம் எதில் அளவிடப்படுகிறது?", a: ["Hertz", "Bits", "Bytes", "Amps"], c: "Hertz" },
-            { q: "Email கண்டுபிடித்தவர் யார்?", a: ["Ray Tomlinson", "Bill Gates", "Vint Cerf", "Jobs"], c: "Ray Tomlinson" },
-            { q: "எது 'Open Source' OS?", a: ["Linux", "Windows", "macOS", "iOS"], c: "Linux" },
-            { q: "ROM என்பதன் விரிவாக்கம் என்ன?", a: ["Read Only Memory", "Random Only Memory", "Ready On Memory", "Read Open Memory"], c: "Read Only Memory" },
-            { q: "கணினியின் மூளை எது?", a: ["CPU", "RAM", "ALU", "Control Unit"], c: "CPU" },
-            { q: "ஒரு Byte-இல் எத்தனை Bits உள்ளன?", a: ["8", "4", "16", "32"], c: "8" },
-            { q: "PDF என்பதன் விரிவாக்கம்?", a: ["Portable Document Format", "Print Doc File", "Personal Doc Format", "Port Doc File"], c: "Portable Document Format" },
-            { q: "எது சமூக வலைதளம் அல்ல?", a: ["Google Search", "Facebook", "Instagram", "Twitter"], c: "Google Search" },
-            { q: "முதல் தலைமுறை கணினி எதைப் பயன்படுத்தியது?", a: ["Vacuum Tubes", "Transistors", "IC", "Microprocessor"], c: "Vacuum Tubes" },
-            { q: "எது 'Permanent Memory'?", a: ["Hard Disk", "RAM", "Cache", "Virtual Memory"], c: "Hard Disk" },
-            { q: "கணினியின் தற்காலிக நினைவகம் எது?", a: ["RAM", "ROM", "BIOS", "Registers"], c: "RAM" },
-            { q: "கணினி வலையமைப்பில் IP என்பதன் பொருள்?", a: ["Internet Protocol", "Internal Process", "Inter Point", "Info Protocol"], c: "Internet Protocol" },
-            { q: "எது ஒரு 'Browser'?", a: ["Chrome", "Windows", "Excel", "WhatsApp"], c: "Chrome" },
-            { q: "HTTP-இல் 'S' என்பதன் பொருள்?", a: ["Secure", "Simple", "Standard", "System"], c: "Secure" },
-            { q: "GUI என்பதன் விரிவாக்கம்?", a: ["Graphical User Interface", "Global Unit Info", "General User Inter", "Guide User Info"], c: "Graphical User Interface" },
-            { q: "எது 'Spreadsheet' மென்பொருள்?", a: ["Excel", "Word", "PowerPoint", "Access"], c: "Excel" },
-            { q: "USB விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "User Series Bus", "Universal Smart Bus"], c: "Universal Serial Bus" },
-            { q: "பாதுகாப்பான Password எது?", a: ["@Stro#ng12", "12345", "password", "Admin"], c: "@Stro#ng12" },
-            { q: "எது ஒரு 'Malware'?", a: ["Virus", "Firewall", "Antivirus", "Update"], c: "Virus" },
-            { q: "C மொழியை உருவாக்கியவர் யார்?", a: ["Dennis Ritchie", "Ken Thompson", "Bjarne", "James Gosling"], c: "Dennis Ritchie" },
-            { q: "HTML எதற்காகப் பயன்படுகிறது?", a: ["Web Design", "Database", "Gaming", "Calculations"], c: "Web Design" },
-            { q: "BIOS எங்கே சேமிக்கப்பட்டிருக்கும்?", a: ["ROM", "RAM", "Hard Disk", "USB"], c: "ROM" },
-            { q: "IIST-இன் முழு வடிவம் என்ன?", a: ["Inst. of Informatic Skill Tech", "Info Tech", "India Tech", "Indust. Tech"], c: "Inst. of Informatic Skill Tech" },
-            // ... (இதே போல 100 கேள்விகள் வரை நீங்கள் q, a, c அடிப்படையில் சேர்த்துக் கொள்ளலாம்)
-            { q: "ஒரு Kilobyte (1KB) என்பது எத்தனை Bytes?", a: ["1024", "1000", "1200", "512"], c: "1024" }
+            { q: "IPv6 முகவரி எத்தனை பிட்களைக் கொண்டது?", a: ["128 Bits", "32 Bits", "64 Bits", "256 Bits"], c: "128 Bits" },
+            { q: "கணினியின் தந்தை (Father of Computer) யார்?", a: ["Charles Babbage", "Alan Turing", "Bill Gates", "Blaise Pascal"], c: "Charles Babbage" },
+            { q: "1 TB என்பது எத்தனை GB-க்கு சமம்?", a: ["1024 GB", "1000 GB", "1100 GB", "512 GB"], c: "1024 GB" },
+            { q: "எது ஒரு 'Input Device' அல்ல?", a: ["Monitor", "Keyboard", "Mouse", "Scanner"], c: "Monitor" },
+            { q: "WWW-ஐ உருவாக்கியவர் யார்?", a: ["Tim Berners-Lee", "Vint Cerf", "Larry Page", "Mark Zuckerberg"], c: "Tim Berners-Lee" },
+            { q: "IIST (Institute of Informatic Skill Tech) அமைந்துள்ள வீதி எது?", a: ["Navalar Road", "Hospital Road", "Kandy Road", "Main Street"], c: "Navalar Road" },
+            { q: "கணினியின் தற்காலிக நினைவகம் (Temporary Memory) எது?", a: ["RAM", "ROM", "Hard Disk", "SSD"], c: "RAM" },
+            { q: "CPU-இன் வேகம் எதில் அளவிடப்படுகிறது?", a: ["Hertz", "Bits", "Amps", "Bytes"], c: "Hertz" },
+            { q: "மின்னஞ்சலை (Email) கண்டுபிடித்தவர் யார்?", a: ["Ray Tomlinson", "Bill Gates", "Tim Berners-Lee", "Steve Jobs"], c: "Ray Tomlinson" },
+            { q: "எது ஒரு 'Open Source' OS?", a: ["Linux", "Windows", "macOS", "iOS"], c: "Linux" },
+            { q: "Python மொழியை உருவாக்கியவர் யார்?", a: ["Guido van Rossum", "Dennis Ritchie", "James Gosling", "Bjarne Stroustrup"], c: "Guido van Rossum" },
+            { q: "GUI என்பதன் விரிவாக்கம் என்ன?", a: ["Graphical User Interface", "Global Unit Info", "General User Inter", "Guide User Info"], c: "Graphical User Interface" },
+            { q: "USB என்பதன் விரிவாக்கம் என்ன?", a: ["Universal Serial Bus", "Unit Serial Bus", "Universal Smart Bus", "User Serial Bus"], c: "Universal Serial Bus" },
+            { q: "எது ஒரு Malware வகை அல்ல?", a: ["Firewall", "Virus", "Trojan", "Spyware"], c: "Firewall" },
+            { q: "முதல் தலைமுறை கணினிகளில் எவை பயன்படுத்தப்பட்டன?", a: ["Vacuum Tubes", "Transistors", "ICs", "Microprocessors"], c: "Vacuum Tubes" },
+            { q: "HTTP-இல் 'S' என்பதன் பொருள் என்ன?", a: ["Secure", "Simple", "Standard", "System"], c: "Secure" },
+            { q: "ஒரு Byte-இல் எத்தனை பிட்டுகள் (Bits) உள்ளன?", a: ["8 Bits", "4 Bits", "16 Bits", "32 Bits"], c: "8 Bits" },
+            { q: "எது ஒரு Web Browser?", a: ["Google Chrome", "Windows", "MS Excel", "WhatsApp"], c: "Google Chrome" },
+            { q: "PDF என்பதன் விரிவாக்கம் என்ன?", a: ["Portable Document Format", "Print Doc File", "Personal Document", "Port Doc Format"], c: "Portable Document Format" },
+            { q: "ROM என்பதன் விரிவாக்கம் என்ன?", a: ["Read Only Memory", "Random Only Memory", "Ready On Memory", "Read Open Memory"], c: "Read Only Memory" }
+            // மீதமுள்ள 80 கேள்விகளை இதே முறையில் (q, a, c) இங்கு சேர்த்து 100 ஆக்கலாம்.
         ];
 
         let quizData = []; 
@@ -110,8 +124,10 @@
         const quizUI = document.getElementById('quiz-outer-container');
 
         function prepareQuiz() {
+            // 100 கேள்விகளிலிருந்து 10 கேள்விகளை ரேண்டமாக எடுத்தல்
             let shuffled = [...questionBank].sort(() => 0.5 - Math.random());
             quizData = shuffled.slice(0, 10);
+            // விடைகளை குலுக்குதல்
             quizData.forEach(item => item.a.sort(() => 0.5 - Math.random()));
         }
 
@@ -152,7 +168,6 @@
                 document.getElementById('correct-count').innerText = correctAnswers;
             } else {
                 btn.classList.add('wrong-anim');
-                // சரியான பதிலை பச்சையாகக் காட்டுதல்
                 allBtns.forEach(b => {
                     if (b.innerText === correct) b.classList.add('correct-anim');
                 });
@@ -162,7 +177,7 @@
                 currentIdx++;
                 if (currentIdx < quizData.length) loadQuestion();
                 else showResult();
-            }, 1500); // 1.5 விநாடி தாமதம் (பதிலைப் பார்க்க)
+            }, 1500);
         }
 
         function showResult() {
@@ -170,16 +185,20 @@
             document.getElementById('result-screen').style.display = 'block';
             document.getElementById('final-correct').innerText = correctAnswers;
 
+            const resTitle = document.getElementById('result-title');
+            const discInfo = document.getElementById('discount-info');
+            const coupArea = document.getElementById('coupon-area');
+
             if(correctAnswers === 10) {
-                document.getElementById('result-title').innerText = "வெற்றி!";
-                document.getElementById('discount-val').innerText = "LKR 100 OFF";
-                document.getElementById('discount-val').style.color = "#2ecc71";
-                document.getElementById('coupon-area').style.display = 'block';
+                resTitle.innerText = "அற்புதமான வெற்றி!";
+                resTitle.style.color = "#2ecc71";
+                discInfo.innerHTML = "LKR 500-க்கு மேல் பொருட்கள் வாங்கும்போது<br><span class='promo-val'>LKR 100 OFF</span>";
+                coupArea.style.display = 'block';
             } else {
-                document.getElementById('result-title').innerText = "தோல்வி!";
-                document.getElementById('discount-val').innerText = "தள்ளுபடி இல்லை";
-                document.getElementById('discount-val').style.color = "#e74c3c";
-                document.getElementById('coupon-area').style.display = 'none';
+                resTitle.innerText = "மீண்டும் முயற்சிப்போம்!";
+                resTitle.style.color = "#e74c3c";
+                discInfo.innerHTML = "<span style='color:#e74c3c'>தள்ளுபடி இல்லை</span><br><span style='font-size:12px'>10/10 எடுத்தால் மட்டுமே தள்ளுபடி உண்டு!</span>";
+                coupArea.style.display = 'none';
             }
         }
     </script>
